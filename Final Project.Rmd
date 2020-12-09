@@ -12,5 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load Data
 ```{r}
 meat <- read.csv("RaguseaMeatWashingSurveyResponsesRaw.csv")
+
 ```
 
