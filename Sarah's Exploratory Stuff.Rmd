@@ -1,0 +1,23 @@
+---
+title: "Sarah's Exploratory Stuff"
+author: "Sarah Falkovic"
+date: "12/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(janitor)
+library(tidyverse)
+```
+
+# Load Data
+```{r}
+meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
+    col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
+    skip = 1) %>% 
+  clean_names()
+```

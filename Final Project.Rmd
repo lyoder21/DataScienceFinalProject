@@ -14,4 +14,14 @@ library(janitor)
 library(tidyverse)
 ```
 
+<<<<<<< HEAD
+=======
+# Load Data
+```{r}
+meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
+    col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
+    skip = 1) %>% 
+  clean_names()
+```
+>>>>>>> 6cbeff1f17b2b5600def0fdf604b89b15b47ec78
 
