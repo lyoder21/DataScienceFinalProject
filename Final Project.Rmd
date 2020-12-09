@@ -9,9 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(janitor)
+library(tidyverse)
+```
+
 # Load Data
 ```{r}
-meat <- read.csv("RaguseaMeatWashingSurveyResponsesRaw.csv")
-
+meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
+    col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
+    skip = 1) %>% 
+  clean_names()
 ```
 
