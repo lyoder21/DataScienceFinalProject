@@ -45,7 +45,7 @@ recode(meat$country_origin,
 
 world_map <- map_data("world")
 
-meat_world<- meat %>% 
+meat_age<- meat %>% 
   mutate(country_origin = recode(meat$country_origin, 
        `United States of America` = "USA",
        `United Kingdom of Great Britain and Northern Ireland` = "UK")) %>% 
@@ -57,5 +57,22 @@ meat_world<- meat %>%
                fill = avg_age))+
   expand_limits(x = world_map$long, y = world_map$lat) + 
   expand_limits(x = world_map$long, y = world_map$lat)
-  #theme(legend.background = element_blank())
+
+meat_age
+
+meat_importance<- meat %>% 
+  mutate(country_origin = recode(meat$country_origin, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK")) %>% 
+  group_by(country_origin) %>% 
+  summarize(avg_importance = mean(food_safety_important)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_origin,
+               fill = avg_importance))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)
+
+meat_world
+meat_importance
 ```
