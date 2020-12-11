@@ -1,0 +1,39 @@
+---
+title: "Lydia Messing Around"
+author: "Lydia Yoder"
+date: "12/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(janitor)
+library(tidyverse)
+```
+
+
+# Load Data
+```{r}
+meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
+    col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
+    skip = 1) %>% 
+  clean_names() %>% 
+  filter(age <= 150, age>=9) %>% 
+  filter(gender == "Female"|gender=="Male"|gender=="Non-binary"|gender=="Prefer not to disclose")
+```
+```{r}
+meat %>% 
+  ggplot(aes(x=age, color = gender))+
+  geom_density()
+
+meat %>% 
+  group_by(age) %>% 
+  summarize(Food_Safety_Importance = mean(food_safety_important)) %>% 
+  ggplot(aes(x=age, y=Food_Safety_Importance))+
+  geom_point()
+  
+```
+
