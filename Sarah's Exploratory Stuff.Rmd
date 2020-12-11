@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(janitor)
 library(tidyverse)
+library(gifski)
+library(gganimate)
 ```
 
 # Load Data
@@ -20,4 +22,35 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
     col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
     skip = 1) %>% 
   clean_names()
+```
+
+
+```{r}
+target <- c("Male", "Female", "Non-binary", "Transgender male", "Transgender female", "Prefer not to disclose", "NA")
+
+meat %>% 
+  filter(gender == target) %>% 
+  ggplot(aes(x = gender, fill = gender))+
+  geom_bar() +
+  scale_fill_viridis_d()
+
+```
+
+```{r}
+country_choropleth(plotdata,
+                   num_colors=9) +
+  scale_fill_brewer(palette="YlOrRd") +
+  labs(title = "Life expectancy by country",
+       subtitle = "Gapminder 2007 data",
+       caption = "source: https://www.gapminder.org",
+       fill = "Years")
+
+```
+
+```{r}
+wash <- c()
+
+meat %>% 
+  filter(category = wash_pork wash_fowl wash_beef)
+
 ```
