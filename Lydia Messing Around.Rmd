@@ -49,7 +49,6 @@ meat_world<- meat %>%
   mutate(country_origin = recode(meat$country_origin, 
        `United States of America` = "USA",
        `United Kingdom of Great Britain and Northern Ireland` = "UK")) %>% 
-  filter(country_origin == c("USA", "UK", "Germany", "Canada")) %>% 
   group_by(country_origin) %>% 
   summarize(avg_age = mean(age)) %>% 
   ggplot() +
