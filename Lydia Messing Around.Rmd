@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(janitor)
 library(tidyverse)
+library(dplyr)
 ```
 
 
@@ -37,3 +38,25 @@ meat %>%
   
 ```
 
+```{r}
+recode(meat$country_origin, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK")
+
+world_map <- map_data("world")
+
+meat_world<- meat %>% 
+  mutate(country_origin = recode(meat$country_origin, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK")) %>% 
+  filter(country_origin == c("USA", "UK", "Germany", "Canada")) %>% 
+  group_by(country_origin) %>% 
+  summarize(avg_age = mean(age)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_origin,
+               fill = avg_age))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)
+  #theme(legend.background = element_blank())
+```
