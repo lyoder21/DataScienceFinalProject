@@ -14,6 +14,7 @@ library(janitor)
 library(tidyverse)
 ```
 
+
 # Load Data
 ```{r}
 meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
@@ -21,4 +22,5 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
     skip = 1) %>% 
   clean_names()
 ```
+
 
