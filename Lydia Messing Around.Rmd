@@ -25,6 +25,7 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
   filter(age <= 150, age>=9) %>% 
   filter(gender == "Female"|gender=="Male"|gender=="Non-binary"|gender=="Prefer not to disclose")
 ```
+
 ```{r}
 meat %>% 
   ggplot(aes(x=age, color = gender))+
