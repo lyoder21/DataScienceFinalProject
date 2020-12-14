@@ -23,4 +23,3 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
   clean_names()
 ```
 
-
