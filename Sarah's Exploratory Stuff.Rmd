@@ -174,7 +174,7 @@ g <- meat %>%
        title = "Other Reasons",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) 
 
 a + b + c + d + e + f + g 
 ```
