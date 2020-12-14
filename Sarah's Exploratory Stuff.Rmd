@@ -113,6 +113,8 @@ meat %>%
 ```
 
 ```{r}
+# ranking reasons
+
 aa <- meat %>% 
   summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
 
@@ -217,5 +219,171 @@ work + plot_annotation(title = "Reasons for Washing Meat")
 meat %>% 
   summarise(mean(reason_other_rank, na.rm = TRUE),
             )
+
+```
+
+```{r}
+#ranking methods
+
+i <-meat %>%
+  ggplot(aes(x = method_running_water_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Running Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_running_water_rank, na.rm = TRUE))) 
+
+j <- meat %>%
+  ggplot(aes(x = method_water_rinse_bowl_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Rinse in Bowl 
+       with Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_rinse_bowl_rank, na.rm = TRUE)))
+
+k <- meat %>%
+  ggplot(aes(x = method_nonwater_rinse_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Nonwater Rinse",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_rinse_rank, na.rm = TRUE)))
+
+l <- meat %>%
+  ggplot(aes(x = method_water_soak_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_soak_rank, na.rm = TRUE)))
+
+m <- meat %>%
+  ggplot(aes(x = method_nonwater_soak_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Nonwater",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_soak_rank, na.rm = TRUE)))
+
+n <- meat %>%
+  ggplot(aes(x = method_other_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Other",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_other_rank, na.rm = TRUE)))
+               
+
+methods <-  i + j + k + l + m + n
+
+methods + plot_annotation(title = "Methods for Washing Meat")
+
+```
+
+
+```{r}
+#concerns
+
+o <- meat %>% 
+  filter(remove_pathogen_rank != "NA") %>% 
+  ggplot(aes(y = remove_pathogen_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Pathogens",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+p <-meat %>% 
+  filter(remove_chemicals_rank != "NA") %>% 
+  ggplot(aes(y = remove_chemicals_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Chemicals",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+q <- meat %>% 
+  filter(remove_inedible_rank!= "NA") %>% 
+  ggplot(aes(y = remove_inedible_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Inedible",
+       y = "  ") +
+  theme(legend.position = "none")   
+
+r <- meat %>% 
+  filter(remove_undesirable_rank != "NA") %>% 
+  ggplot(aes(y = remove_undesirable_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Undesirable",
+       y = "  ") +
+  theme(legend.position = "none") 
+  
+s <- meat %>% 
+  filter(remove_blood_rank != "NA") %>% 
+  ggplot(aes(y = remove_blood_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Blood",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+t <- meat %>% 
+  filter(remove_slime_rank != "NA") %>% 
+  ggplot(aes(y = remove_slime_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Slime",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+u <- meat %>% 
+  filter(remove_fat_rank != "NA") %>% 
+  ggplot(aes(y = remove_fat_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Fat",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+v <- meat %>% 
+  filter(remove_liquid_rank != "NA") %>% 
+  ggplot(aes(y = remove_liquid_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Liquids",
+       y = "  ") +
+  theme(legend.position = "none")   
+
+w <- meat %>% 
+  filter(remove_other_rank != "NA") %>% 
+  ggplot(aes(y = remove_other_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Other",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+concerns <-  o + p + q + r + s + t + u + v + w 
+concerns + plot_annotation(title = "What is Being Removed when Washing Meat?")
+```
+
+```{r}
+#removal concern
+
+meat %>% 
+  filter(remove_pathogen_rank != "NA") %>% 
+  ggplot(aes(x = remove_pathogen_rank)) +
+  geom_bar()
+
+
 
 ```
