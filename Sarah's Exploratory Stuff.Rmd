@@ -113,6 +113,9 @@ meat %>%
 ```
 
 ```{r}
+aa <- meat %>% 
+  mean(reason_religious_practice_rank, na.rm = TRUE)
+
 a <-meat %>%
   ggplot(aes(x = reason_religious_practice_rank, fill = "00FFFF")) +
   geom_histogram() +
@@ -120,7 +123,11 @@ a <-meat %>%
        title = "Religious Customs",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
+
+bb <- meat %>% 
+  mean(reason_religious_practice_rank, na.rm = TRUE)
 
 b <- meat %>%
   ggplot(aes(x = reason_nonreligious_custom_rank, fill = "00FFFF")) +
@@ -129,7 +136,11 @@ b <- meat %>%
        title = "Nonreligious Customs",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
+
+cc <- meat %>% 
+  mean(reason_health_safety_rank, na.rm = TRUE)	
 
 c <- meat %>%
   ggplot(aes(x = reason_health_safety_rank, fill = "00FFFF")) +
@@ -138,7 +149,11 @@ c <- meat %>%
        title = "Health and Safety",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
+
+dd <- meat %>% 
+  mean(reason_improve_taste_rank, na.rm = TRUE)	
 
 d <- meat %>%
   ggplot(aes(x = reason_improve_taste_rank, fill = "00FFFF")) +
@@ -147,7 +162,12 @@ d <- meat %>%
        title = "Improving Taste",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=dd, y=0), aes(x + .4, y), label=dd, vjust= -2) 
+
+
+ee <- meat %>% 
+  mean(reason_improve_texture_rank, na.rm = TRUE)	
 
 e <- meat %>%
   ggplot(aes(x = reason_improve_texture_rank, fill = "00FFFF")) +
@@ -156,7 +176,11 @@ e <- meat %>%
        title = "Improving Texture",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
+
+ff <- meat %>% 
+  mean(reason_appearance_rank, na.rm = TRUE)	
 
 f <- meat %>%
   ggplot(aes(x = reason_appearance_rank, fill = "00FFFF")) +
@@ -165,7 +189,11 @@ f <- meat %>%
        title = "Alter Appearance",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE)))
+  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -2)
+
+gg <- meat %>% 
+  mean(reason_other_rank, na.rm = TRUE)
 
 g <- meat %>%
   ggplot(aes(x = reason_other_rank, fill = "00FFFF")) +
@@ -174,7 +202,9 @@ g <- meat %>%
        title = "Other Reasons",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) 
+  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=gg ,y=0), aes(x + .4, y), label=gg, vjust= -2)
+               
 
 a + b + c + d + e + f + g 
 ```
