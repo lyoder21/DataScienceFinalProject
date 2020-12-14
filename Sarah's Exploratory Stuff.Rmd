@@ -206,18 +206,13 @@ g <- meat %>%
   geom_text(data=data.frame(x=gg ,y=0), aes(x + .4, y), label=gg, vjust= -2)
                
 
-a + b + c + d + e + f + g 
+work <-  a + b + c + d + e + f + g 
+
+work + plot_annotation(title = "Reasons for Washing Meat")
 ```
 
 ```{r}
 meat %>% 
-  summarize(mean(reason_health_safety_rank, na.rm = TRUE),
-            mean(reason_religious_practice_rank, na.rm = TRUE),
-            mean(reason_nonreligious_custom_rank, na.rm = TRUE),
-            mean(reason_improve_taste_rank, na.rm = TRUE),
-            mean(reason_improve_texture_rank, na.rm = TRUE),
-            mean(reason_appearance_rank, na.rm = TRUE),
-            mean(reason_other_rank, na.rm = TRUE)) %>% 
-  arrange()
+  filter()
 
 ```
