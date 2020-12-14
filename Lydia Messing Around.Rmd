@@ -39,9 +39,6 @@ meat %>%
 ```
 
 ```{r}
-recode(meat$country_origin, 
-       `United States of America` = "USA",
-       `United Kingdom of Great Britain and Northern Ireland` = "UK")
 
 world_map <- map_data("world")
 
@@ -64,7 +61,8 @@ meat_importance<- meat %>%
   mutate(country_origin = recode(meat$country_origin, 
        `United States of America` = "USA",
        `United Kingdom of Great Britain and Northern Ireland` = "UK")) %>% 
-  group_by(country_origin) %>% 
+  group_by(country_origin) %>%
+  filter(n() >= 3) %>% 
   summarize(avg_importance = mean(food_safety_important)) %>% 
   ggplot() +
   geom_map(map = world_map,
@@ -73,6 +71,10 @@ meat_importance<- meat %>%
   expand_limits(x = world_map$long, y = world_map$lat) + 
   expand_limits(x = world_map$long, y = world_map$lat)
 
-meat_world
+
 meat_importance
 ```
+
+> could we try transitioning by age? Like a new map of answers for each age?
+>could we add a plotly so that you can hover over the country and see its name?
+>What format are we going to do for our final project?
