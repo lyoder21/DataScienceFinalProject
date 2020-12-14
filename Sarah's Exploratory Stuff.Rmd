@@ -114,7 +114,7 @@ meat %>%
 
 ```{r}
 aa <- meat %>% 
-  mean(reason_religious_practice_rank, na.rm = TRUE)
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
 
 a <-meat %>%
   ggplot(aes(x = reason_religious_practice_rank, fill = "00FFFF")) +
@@ -127,7 +127,7 @@ a <-meat %>%
   geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
 
 bb <- meat %>% 
-  mean(reason_religious_practice_rank, na.rm = TRUE)
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
 
 b <- meat %>%
   ggplot(aes(x = reason_nonreligious_custom_rank, fill = "00FFFF")) +
@@ -140,7 +140,7 @@ b <- meat %>%
   geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
 
 cc <- meat %>% 
-  mean(reason_health_safety_rank, na.rm = TRUE)	
+  summarise(mean(reason_health_safety_rank, na.rm = TRUE))
 
 c <- meat %>%
   ggplot(aes(x = reason_health_safety_rank, fill = "00FFFF")) +
@@ -153,7 +153,7 @@ c <- meat %>%
   geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
 
 dd <- meat %>% 
-  mean(reason_improve_taste_rank, na.rm = TRUE)	
+  summarise(mean(reason_improve_taste_rank, na.rm = TRUE))	
 
 d <- meat %>%
   ggplot(aes(x = reason_improve_taste_rank, fill = "00FFFF")) +
@@ -167,7 +167,7 @@ d <- meat %>%
 
 
 ee <- meat %>% 
-  mean(reason_improve_texture_rank, na.rm = TRUE)	
+  summarise(mean(reason_improve_texture_rank, na.rm = TRUE))	
 
 e <- meat %>%
   ggplot(aes(x = reason_improve_texture_rank, fill = "00FFFF")) +
@@ -180,7 +180,7 @@ e <- meat %>%
   geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
 
 ff <- meat %>% 
-  mean(reason_appearance_rank, na.rm = TRUE)	
+  summarise(mean(reason_appearance_rank, na.rm = TRUE))	
 
 f <- meat %>%
   ggplot(aes(x = reason_appearance_rank, fill = "00FFFF")) +
@@ -190,10 +190,12 @@ f <- meat %>%
        x = "  ") +
   theme(legend.position = "none") +
   geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -2)
+  geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -28)
 
-gg <- meat %>% 
-  mean(reason_other_rank, na.rm = TRUE)
+gg <- 
+  summarise(meat, mean(reason_other_rank, na.rm = TRUE))
+  
+ # 2.390057 mean rank value for "other", found using 
 
 g <- meat %>%
   ggplot(aes(x = reason_other_rank, fill = "00FFFF")) +
@@ -203,7 +205,7 @@ g <- meat %>%
        x = "  ") +
   theme(legend.position = "none") +
   geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=gg ,y=0), aes(x + .4, y), label=gg, vjust= -2)
+  geom_text(data=data.frame(x = gg ,y=0), aes(x + .4, y), label= 2.390057, vjust= -28)
                
 
 work <-  a + b + c + d + e + f + g 
@@ -213,6 +215,7 @@ work + plot_annotation(title = "Reasons for Washing Meat")
 
 ```{r}
 meat %>% 
-  filter()
+  summarise(mean(reason_other_rank, na.rm = TRUE),
+            )
 
 ```
