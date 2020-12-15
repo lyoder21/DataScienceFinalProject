@@ -14,6 +14,7 @@ library(janitor)
 library(tidyverse)
 library(gifski)
 library(gganimate)
+library(patchwork)
 ```
 
 # Load Data
@@ -112,61 +113,277 @@ meat %>%
 ```
 
 ```{r}
-meat %>% 
-  rename(reason_health_safety_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_concerned_about_the_health_and_safety_of_the_meat,
-         
-         reason_religious_practice_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_acting_in_accordance_with_a_religious_belief_or_practice,
-         
-         reason_nonreligious_custom_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_following_a_non_religious_custom_or_tradition,
-         
-         reason_appearance_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_appearance_of_the_meat,
-        
-         reason_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
-         
-         reason_improve_texture_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_texture_of_the_meat,
-         
-         reason_improve_taste_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_taste_or_smell_of_the_meat,
-         
-         remove_pathogen_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_pathogens_bacteria_viruses_fungi_etc,
-         
-         remove_inedible_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_inedible_debris_dirt_dust_bone_fragments_feathers_etc,
-         
-         remove_blood_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_blood,
-         
-         remove_liquid_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_meat_juice_the_pink_non_blood_liquid_that_comes_out_of_muscle_tissue,
-         
-         remove_slime_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_slime,
-         
-         remove_chemicals_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_artificial_chemicals_preservatives_pesticides_cleaning_solutions_etc,
-         
-         remove_undesirable_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_undesirable_flavors_or_odors,
-         
-        remove_fat_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_fat,
-        
-        remove_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
-        
-        method_water_rinse_bowl_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_in_a_bowl_or_basin_of_plain_water,
-        
-        method_nonwater_rinse_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_in_anything_other_than_plain_water_salt_brine_vinegar_citrus_etc,
-        
-        method_running_water_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_under_running_water,
-        
-        method_nonwater_soak_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_soaking_awhile_in_anything_other_than_plain_water_salt_brine_vinegar_citrus_etc,
-        
-        method_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
-        
-        method_water_soak_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_soaking_awhile_in_plain_water
+# ranking reasons
 
-         ) %>% 
+aa <- meat %>% 
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
+
+a <-meat %>%
   ggplot(aes(x = reason_religious_practice_rank, fill = "00FFFF")) +
   geom_histogram() +
-  labs(y = "number of responses", 
-       title = "Importance of Washing Meat due to Religious Custom Ranked on a Scale of 1-7",
+  labs(y = "responses", 
+       title = "Religious Customs",
        x = "  ") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
+
+bb <- meat %>% 
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
+
+b <- meat %>%
+  ggplot(aes(x = reason_nonreligious_custom_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Nonreligious Customs",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
+
+cc <- meat %>% 
+  summarise(mean(reason_health_safety_rank, na.rm = TRUE))
+
+c <- meat %>%
+  ggplot(aes(x = reason_health_safety_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Health and Safety",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
+
+dd <- meat %>% 
+  summarise(mean(reason_improve_taste_rank, na.rm = TRUE))	
+
+d <- meat %>%
+  ggplot(aes(x = reason_improve_taste_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Improving Taste",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=dd, y=0), aes(x + .4, y), label=dd, vjust= -2) 
+
+
+ee <- meat %>% 
+  summarise(mean(reason_improve_texture_rank, na.rm = TRUE))	
+
+e <- meat %>%
+  ggplot(aes(x = reason_improve_texture_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Improving Texture",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
+
+ff <- meat %>% 
+  summarise(mean(reason_appearance_rank, na.rm = TRUE))	
+
+f <- meat %>%
+  ggplot(aes(x = reason_appearance_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Alter Appearance",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -28)
+
+gg <- 
+  summarise(meat, mean(reason_other_rank, na.rm = TRUE))
+  
+ # 2.390057 mean rank value for "other", found using 
+
+g <- meat %>%
+  ggplot(aes(x = reason_other_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Other Reasons",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) +
+  geom_text(data=data.frame(x = gg ,y=0), aes(x + .4, y), label= 2.390057, vjust= -28)
+               
+
+work <-  a + b + c + d + e + f + g 
+
+work + plot_annotation(title = "Reasons for Washing Meat")
 ```
 
 ```{r}
+meat %>% 
+  summarise(mean(reason_other_rank, na.rm = TRUE),
+            )
+
+```
+
+```{r}
+#ranking methods
+
+i <-meat %>%
+  ggplot(aes(x = method_running_water_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Running Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_running_water_rank, na.rm = TRUE))) 
+
+j <- meat %>%
+  ggplot(aes(x = method_water_rinse_bowl_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Rinse in Bowl 
+       with Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_rinse_bowl_rank, na.rm = TRUE)))
+
+k <- meat %>%
+  ggplot(aes(x = method_nonwater_rinse_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Nonwater Rinse",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_rinse_rank, na.rm = TRUE)))
+
+l <- meat %>%
+  ggplot(aes(x = method_water_soak_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_soak_rank, na.rm = TRUE)))
+
+m <- meat %>%
+  ggplot(aes(x = method_nonwater_soak_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Nonwater",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_soak_rank, na.rm = TRUE)))
+
+n <- meat %>%
+  ggplot(aes(x = method_other_rank, fill = "00FFFF")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Other",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_other_rank, na.rm = TRUE)))
+               
+
+methods <-  i + j + k + l + m + n
+
+methods + plot_annotation(title = "Methods for Washing Meat")
+
+```
+
+
+```{r}
+#concerns
+
+o <- meat %>% 
+  filter(remove_pathogen_rank != "NA") %>% 
+  ggplot(aes(y = remove_pathogen_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Pathogens",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+p <-meat %>% 
+  filter(remove_chemicals_rank != "NA") %>% 
+  ggplot(aes(y = remove_chemicals_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Chemicals",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+q <- meat %>% 
+  filter(remove_inedible_rank!= "NA") %>% 
+  ggplot(aes(y = remove_inedible_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Inedible",
+       y = "  ") +
+  theme(legend.position = "none")   
+
+r <- meat %>% 
+  filter(remove_undesirable_rank != "NA") %>% 
+  ggplot(aes(y = remove_undesirable_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Undesirable",
+       y = "  ") +
+  theme(legend.position = "none") 
+  
+s <- meat %>% 
+  filter(remove_blood_rank != "NA") %>% 
+  ggplot(aes(y = remove_blood_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Blood",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+t <- meat %>% 
+  filter(remove_slime_rank != "NA") %>% 
+  ggplot(aes(y = remove_slime_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Slime",
+       y = "  ") +
+  theme(legend.position = "none") 
+
+u <- meat %>% 
+  filter(remove_fat_rank != "NA") %>% 
+  ggplot(aes(y = remove_fat_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Fat",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+v <- meat %>% 
+  filter(remove_liquid_rank != "NA") %>% 
+  ggplot(aes(y = remove_liquid_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Liquids",
+       y = "  ") +
+  theme(legend.position = "none")   
+
+w <- meat %>% 
+  filter(remove_other_rank != "NA") %>% 
+  ggplot(aes(y = remove_other_rank, fill = "00FFFF")) +
+  geom_bar() +
+  labs(x = "responses", 
+       title = "Other",
+       y = "  ") +
+  theme(legend.position = "none")  
+
+concerns <-  o + p + q + r + s + t + u + v + w 
+concerns + plot_annotation(title = "What is Being Removed when Washing Meat?")
+```
+
+```{r}
+#removal concern
+
+meat %>% 
+  filter(remove_pathogen_rank != "NA") %>% 
+  ggplot(aes(x = remove_pathogen_rank)) +
+  geom_bar()
+
 
 
 ```
