@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(janitor)
+library(patchwork)
 library(tidyverse)
 ```
 
@@ -69,14 +70,6 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
   )
 ```
 ```{r}
-special<- world_map %>% 
-  distinct(region) %>% 
-  select(region) %>% 
-  left_join(meat, by = c("region" = "country_residence"))
-
-
-
-
 meat<- meat %>% 
   mutate(country_residence = recode(meat$country_residence, 
        `United States of America` = "USA",
@@ -104,25 +97,46 @@ meat<- meat %>%
        `Korea (Democratic People's Republic of)` = "North Korea"))
 ```
 
+```{r}
+missing_countries_residence <- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_residence")) %>% 
+  rename(country_residence = region) %>% 
+  full_join(meat)
+
+missing_countries_origin<- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_origin")) %>% 
+  rename(country_origin = region) %>% 
+  full_join(meat)
+
+```
 
 
 
 ```{r}
 world_map <- map_data("world")
 
-meat_age<- meat %>% 
-  group_by(country_origin) %>% 
+meat_age<- missing_countries_residence %>% 
+  group_by(country_residence) %>% 
   summarize(avg_age = mean(age)) %>% 
   ggplot() +
   geom_map(map = world_map,
-           aes(map_id = country_origin,
+           aes(map_id = country_residence,
                fill = avg_age))+
   expand_limits(x = world_map$long, y = world_map$lat) + 
-  expand_limits(x = world_map$long, y = world_map$lat)
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  scale_fill_viridis_c(option = "magma")+
+  labs(title = "Average Age By Country of Residence", x="", y="")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
 
-meat_age
-
-meat_importance<- meat %>% 
+meat_importance_origin<- missing_countries_origin %>% 
   group_by(country_origin) %>%
   summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
   ggplot() +
@@ -131,10 +145,41 @@ meat_importance<- meat %>%
                fill = avg_importance))+
   expand_limits(x = world_map$long, y = world_map$lat) + 
   expand_limits(x = world_map$long, y = world_map$lat)+
-  labs(title = "Average Importance of Food Safety")
+  labs(title = "Average Importance of Food Safety By Country of Residence", x="", y="")+
+  scale_fill_viridis_c(option = "magma")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_text(hjust = -0.29, vjust=2.12),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
 
 
-meat_importance
+meat_importance_residence<- missing_countries_residence %>% 
+  group_by(country_residence) %>%
+  summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_residence,
+               fill = avg_importance))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  labs(title = "Average Importance of Food Safety By Country of Residence", x = "", y = "")+
+  scale_fill_viridis_c(option = "magma")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_text(hjust = -0.29, vjust=2.12),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+
+
+meat_age
+meat_importance_residence 
+meat_importance_origin
+
+
+
 ```
 
 ```{r}
