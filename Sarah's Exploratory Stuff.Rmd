@@ -102,13 +102,18 @@ country_choropleth(plotdata,
 ```{r}
 library(wesanderson)
 library(htmltools)
+food.labs <- c("Non-Hispanic", "Hispanic")
+names(food.labs) <- c("No", "Yes")
+
 
 meat %>% 
   filter(houshold_size <= 50,
          hispanic == "Yes"| hispanic == "No") %>% 
   ggplot(aes(x = houshold_size, y = food_safety_important, color = hispanic)) +
   geom_jitter() +
-  facet_wrap(vars(hispanic), nrow = 1) +
+  facet_wrap(vars(hispanic), 
+             nrow = 1, 
+             labeller = labeller(hispanic = food.labs)) +
   labs( x = "Household Size",
        y = "  ",
        caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important",
