@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(janitor)
+library(patchwork)
 library(tidyverse)
 ```
 
@@ -21,6 +22,8 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
     col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
     skip = 1) %>% 
   clean_names() %>% 
+  filter(age <= 150, age>=9) %>% 
+  filter(gender == "Female"|gender=="Male"|gender=="Non-binary"|gender=="Prefer not to disclose") %>% 
   rename(reason_health_safety_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_concerned_about_the_health_and_safety_of_the_meat,
          
          reason_religious_practice_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_acting_in_accordance_with_a_religious_belief_or_practice,
@@ -66,4 +69,130 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
         method_water_soak_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_soaking_awhile_in_plain_water
   )
 ```
+```{r}
+meat<- meat %>% 
+  mutate(country_residence = recode(meat$country_residence, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK",
+       `Russian Federation` = "Russia",
+       `Korea (Republic of)` = "South Korea",
+       `Moldova (Republic of)` = "Moldova",
+       `Macedonia (the former Yugoslav Republic of)` = "Macedonia",
+       `Venezuela (Bolivarian Republic of)` = "Venezuela",
+       `Taiwan, Province of China[a]` = "Taiwan",
+       `Iran (Islamic Republic of)` = "Iran",
+       `Tanzania, United Republic of` = "Tanzania",
+       `Korea (Democratic People's Republic of)` = "North Korea")) %>% 
+  mutate(country_origin = recode(meat$country_origin, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK",
+       `Russian Federation` = "Russia",
+       `Korea (Republic of)` = "South Korea",
+       `Moldova (Republic of)` = "Moldova",
+       `Macedonia (the former Yugoslav Republic of)` = "Macedonia",
+       `Venezuela (Bolivarian Republic of)` = "Venezuela",
+       `Taiwan, Province of China[a]` = "Taiwan",
+       `Iran (Islamic Republic of)` = "Iran",
+       `Tanzania, United Republic of` = "Tanzania",
+       `Korea (Democratic People's Republic of)` = "North Korea"))
+```
+
+```{r}
+missing_countries_residence <- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_residence")) %>% 
+  rename(country_residence = region) %>% 
+  full_join(meat)
+
+missing_countries_origin<- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_origin")) %>% 
+  rename(country_origin = region) %>% 
+  full_join(meat)
+
+```
+
+
+
+```{r}
+world_map <- map_data("world")
+
+meat_age<- missing_countries_residence %>% 
+  group_by(country_residence) %>% 
+  summarize(avg_age = mean(age)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_residence,
+               fill = avg_age))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  scale_fill_viridis_c(option = "magma")+
+  labs(title = "Average Age By Country of Residence", x="", y="")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+
+meat_importance_origin<- missing_countries_origin %>% 
+  group_by(country_origin) %>%
+  summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_origin,
+               fill = avg_importance))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  labs(title = "Average Importance of Food Safety By Country of Residence", x="", y="")+
+  scale_fill_viridis_c(option = "magma")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_text(hjust = -0.29, vjust=2.12),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+
+
+meat_importance_residence<- missing_countries_residence %>% 
+  group_by(country_residence) %>%
+  summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_residence,
+               fill = avg_importance))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  labs(title = "Average Importance of Food Safety By Country of Residence", x = "", y = "")+
+  scale_fill_viridis_c(option = "magma")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_text(hjust = -0.29, vjust=2.12),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+
+
+meat_age
+meat_importance_residence 
+meat_importance_origin
+
+
+
+```
+
+```{r}
+meat %>% 
+  ggplot(aes(x=age, color = gender))+
+  geom_density()
+
+meat %>% 
+  group_by(age) %>% 
+  summarize(Food_Safety_Importance = mean(food_safety_important)) %>% 
+  ggplot(aes(x=age, y=Food_Safety_Importance))+
+  geom_point()
+```
+
+
 
