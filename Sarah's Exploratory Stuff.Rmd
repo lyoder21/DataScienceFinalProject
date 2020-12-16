@@ -69,6 +69,11 @@ meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv",
   )
 ```
 
+```{r}
+meat <- meat %>% 
+  mutate(across(.cols = c(remove_pathogen_rank, remove_chemicals_rank, remove_blood_rank, remove_inedible_rank, remove_undesirable_rank, remove_fat_rank, remove_slime_rank, remove_liquid_rank), .fns = ~fct_relevel(.x, "Of Little Importance", "Unimportant", "Moderately Important", "Important", "Very Important"))) 
+```
+
 
 ```{r}
 target <- c("Male", "Female", "Non-binary", "Transgender male", "Transgender female", "Prefer not to disclose", "NA")
@@ -77,7 +82,9 @@ meat %>%
   filter(gender == target) %>% 
   ggplot(aes(x = gender, fill = gender))+
   geom_bar() +
-  scale_fill_viridis_d()
+  scale_fill_viridis_d() +
+  labs(title = "Gender Distribution of Survey Participants",
+       x = "  ")
 
 ```
 
@@ -102,7 +109,8 @@ meat %>%
   labs(title = "Ranking Food Safety Importance between Household Sizes 
        in Hispanic and Non-Hispanic Populations", 
        x = "Household Size",
-       y = "Food Safety Ranking on 1-5 Scale")
+       y = "Food Safety Ranking on 1-5 Scale",
+       caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
 
 ```
 
@@ -125,8 +133,8 @@ a <-meat %>%
        title = "Religious Customs",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
+  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
 
 bb <- meat %>% 
   summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
@@ -138,8 +146,8 @@ b <- meat %>%
        title = "Nonreligious Customs",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
+  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
 
 cc <- meat %>% 
   summarise(mean(reason_health_safety_rank, na.rm = TRUE))
@@ -151,8 +159,8 @@ c <- meat %>%
        title = "Health and Safety",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
+  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
 
 dd <- meat %>% 
   summarise(mean(reason_improve_taste_rank, na.rm = TRUE))	
@@ -164,8 +172,8 @@ d <- meat %>%
        title = "Improving Taste",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=dd, y=0), aes(x + .4, y), label=dd, vjust= -2) 
+  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE))) 
+ # + geom_text(data=data.frame(x=dd, y=0), aes(x + .4, y), label=dd, vjust= -2) 
 
 
 ee <- meat %>% 
@@ -178,8 +186,8 @@ e <- meat %>%
        title = "Improving Texture",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
+  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
 
 ff <- meat %>% 
   summarise(mean(reason_appearance_rank, na.rm = TRUE))	
@@ -191,11 +199,11 @@ f <- meat %>%
        title = "Alter Appearance",
        x = "  ") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -28)
+  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -28)
 
-gg <- 
-  summarise(meat, mean(reason_other_rank, na.rm = TRUE))
+gg <- meat %>%
+  summarise(mean(reason_other_rank, na.rm = TRUE))
   
  # 2.390057 mean rank value for "other", found using 
 
@@ -203,16 +211,16 @@ g <- meat %>%
   ggplot(aes(x = reason_other_rank, fill = "00FFFF")) +
   geom_histogram() +
   labs(y = "responses", 
-       title = "Other Reasons",
-       x = "  ") +
+       title = "Other Reasons") +
   theme(legend.position = "none") +
-  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) +
-  geom_text(data=data.frame(x = gg ,y=0), aes(x + .4, y), label= 2.390057, vjust= -28)
+  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x = gg ,y=0), aes(x + .4, y), label= 2.390057, vjust= -28)
                
 
-work <-  a + b + c + d + e + f + g 
+work <-  a + b + c + d + e + f + g + plot_annotation(title = "Why do people choose to wash their meat?", 
+                                                     caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
 
-work + plot_annotation(title = "Reasons for Washing Meat")
+work 
 ```
 
 ```{r}
@@ -238,8 +246,7 @@ j <- meat %>%
   ggplot(aes(x = method_water_rinse_bowl_rank, fill = "00FFFF")) +
   geom_histogram() +
   labs(y = "responses", 
-       title = "Rinse in Bowl 
-       with Water",
+       title = "Water in Bowl",
        x = "  ") +
   theme(legend.position = "none") +
   geom_vline(aes(xintercept = mean(method_water_rinse_bowl_rank, na.rm = TRUE)))
@@ -283,7 +290,7 @@ n <- meat %>%
 
 methods <-  i + j + k + l + m + n
 
-methods + plot_annotation(title = "Methods for Washing Meat")
+methods + plot_annotation(title = "Methods for Washing Meat Ranked by Preference/", caption = "Nonwater substances are liquids such as acids and salt brines")
 
 ```
 
@@ -298,7 +305,10 @@ o <- meat %>%
   labs(x = "responses", 
        title = "Pathogens",
        y = "  ") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))  
 
 p <-meat %>% 
   filter(remove_chemicals_rank != "NA") %>% 
@@ -307,25 +317,36 @@ p <-meat %>%
   labs(x = "responses", 
        title = "Chemicals",
        y = "  ") +
-  theme(legend.position = "none")  
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8))  +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))
 
 q <- meat %>% 
   filter(remove_inedible_rank!= "NA") %>% 
   ggplot(aes(y = remove_inedible_rank, fill = "00FFFF")) +
   geom_bar() +
   labs(x = "responses", 
-       title = "Inedible",
+       title = "Inedible
+Portions",
        y = "  ") +
-  theme(legend.position = "none")   
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
 
 r <- meat %>% 
   filter(remove_undesirable_rank != "NA") %>% 
   ggplot(aes(y = remove_undesirable_rank, fill = "00FFFF")) +
   geom_bar() +
   labs(x = "responses", 
-       title = "Undesirable",
+       title = "Undesirable 
+Portions",
        y = "  ") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500)) 
   
 s <- meat %>% 
   filter(remove_blood_rank != "NA") %>% 
@@ -334,7 +355,10 @@ s <- meat %>%
   labs(x = "responses", 
        title = "Blood",
        y = "  ") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500)) 
 
 t <- meat %>% 
   filter(remove_slime_rank != "NA") %>% 
@@ -343,7 +367,11 @@ t <- meat %>%
   labs(x = "responses", 
        title = "Slime",
        y = "  ") +
-  theme(legend.position = "none") 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))
+  
 
 u <- meat %>% 
   filter(remove_fat_rank != "NA") %>% 
@@ -352,7 +380,10 @@ u <- meat %>%
   labs(x = "responses", 
        title = "Fat",
        y = "  ") +
-  theme(legend.position = "none")  
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
 
 v <- meat %>% 
   filter(remove_liquid_rank != "NA") %>% 
@@ -361,7 +392,10 @@ v <- meat %>%
   labs(x = "responses", 
        title = "Liquids",
        y = "  ") +
-  theme(legend.position = "none")   
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
 
 w <- meat %>% 
   filter(remove_other_rank != "NA") %>% 
@@ -370,10 +404,13 @@ w <- meat %>%
   labs(x = "responses", 
        title = "Other",
        y = "  ") +
-  theme(legend.position = "none")  
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 50),
+                     breaks = c(0, 25, 50))
 
 concerns <-  o + p + q + r + s + t + u + v + w 
-concerns + plot_annotation(title = "What is Being Removed when Washing Meat?")
+concerns + plot_annotation(title = "What is Being Removed when Washing Meat?", caption = "Particpants ranked the most important feature washing removes from the meat.") 
 ```
 
 ```{r}
