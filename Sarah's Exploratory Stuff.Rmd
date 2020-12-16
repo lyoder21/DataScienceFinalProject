@@ -82,7 +82,7 @@ meat %>%
   filter(gender == target) %>% 
   ggplot(aes(x = gender, fill = gender))+
   geom_bar() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(option = "magma") +
   labs(title = "Gender Distribution of Survey Participants",
        x = "  ")
 
@@ -100,17 +100,22 @@ country_choropleth(plotdata,
 ```
 
 ```{r}
+library(wesanderson)
+library(htmltools)
+
 meat %>% 
   filter(houshold_size <= 50,
          hispanic == "Yes"| hispanic == "No") %>% 
   ggplot(aes(x = houshold_size, y = food_safety_important, color = hispanic)) +
   geom_jitter() +
   facet_wrap(vars(hispanic), nrow = 1) +
-  labs(title = "Ranking Food Safety Importance between Household Sizes 
-       in Hispanic and Non-Hispanic Populations", 
-       x = "Household Size",
-       y = "Food Safety Ranking on 1-5 Scale",
-       caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
+  labs( x = "Household Size",
+       y = "  ",
+       caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important",
+       title = "Ranking Food Safety Importance between Household Sizes 
+in Hispanic and Non-Hispanic Populations") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = wes_palette("FantasticFox1"))
 
 ```
 
@@ -127,8 +132,8 @@ aa <- meat %>%
   summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
 
 a <-meat %>%
-  ggplot(aes(x = reason_religious_practice_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_religious_practice_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Religious Customs",
        x = "  ") +
@@ -140,8 +145,8 @@ bb <- meat %>%
   summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
 
 b <- meat %>%
-  ggplot(aes(x = reason_nonreligious_custom_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_nonreligious_custom_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Nonreligious Customs",
        x = "  ") +
@@ -153,8 +158,8 @@ cc <- meat %>%
   summarise(mean(reason_health_safety_rank, na.rm = TRUE))
 
 c <- meat %>%
-  ggplot(aes(x = reason_health_safety_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_health_safety_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Health and Safety",
        x = "  ") +
@@ -166,8 +171,8 @@ dd <- meat %>%
   summarise(mean(reason_improve_taste_rank, na.rm = TRUE))	
 
 d <- meat %>%
-  ggplot(aes(x = reason_improve_taste_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_improve_taste_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Improving Taste",
        x = "  ") +
@@ -180,8 +185,8 @@ ee <- meat %>%
   summarise(mean(reason_improve_texture_rank, na.rm = TRUE))	
 
 e <- meat %>%
-  ggplot(aes(x = reason_improve_texture_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_improve_texture_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Improving Texture",
        x = "  ") +
@@ -193,8 +198,8 @@ ff <- meat %>%
   summarise(mean(reason_appearance_rank, na.rm = TRUE))	
 
 f <- meat %>%
-  ggplot(aes(x = reason_appearance_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_appearance_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Alter Appearance",
        x = "  ") +
@@ -208,8 +213,8 @@ gg <- meat %>%
  # 2.390057 mean rank value for "other", found using 
 
 g <- meat %>%
-  ggplot(aes(x = reason_other_rank, fill = "00FFFF")) +
-  geom_histogram() +
+  ggplot(aes(x = reason_other_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
   labs(y = "responses", 
        title = "Other Reasons") +
   theme(legend.position = "none") +
@@ -218,7 +223,7 @@ g <- meat %>%
                
 
 work <-  a + b + c + d + e + f + g + plot_annotation(title = "Why do people choose to wash their meat?", 
-                                                     caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
+                                                     caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important, and the line being the average ranking")
 
 work 
 ```
@@ -234,7 +239,7 @@ meat %>%
 #ranking methods
 
 i <-meat %>%
-  ggplot(aes(x = method_running_water_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_running_water_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Running Water",
@@ -243,7 +248,7 @@ i <-meat %>%
   geom_vline(aes(xintercept = mean(method_running_water_rank, na.rm = TRUE))) 
 
 j <- meat %>%
-  ggplot(aes(x = method_water_rinse_bowl_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_water_rinse_bowl_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Water in Bowl",
@@ -252,7 +257,7 @@ j <- meat %>%
   geom_vline(aes(xintercept = mean(method_water_rinse_bowl_rank, na.rm = TRUE)))
 
 k <- meat %>%
-  ggplot(aes(x = method_nonwater_rinse_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_nonwater_rinse_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Nonwater Rinse",
@@ -261,7 +266,7 @@ k <- meat %>%
   geom_vline(aes(xintercept = mean(method_nonwater_rinse_rank, na.rm = TRUE)))
 
 l <- meat %>%
-  ggplot(aes(x = method_water_soak_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_water_soak_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Soak in Water",
@@ -270,7 +275,7 @@ l <- meat %>%
   geom_vline(aes(xintercept = mean(method_water_soak_rank, na.rm = TRUE)))
 
 m <- meat %>%
-  ggplot(aes(x = method_nonwater_soak_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_nonwater_soak_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Soak in Nonwater",
@@ -279,7 +284,7 @@ m <- meat %>%
   geom_vline(aes(xintercept = mean(method_nonwater_soak_rank, na.rm = TRUE)))
 
 n <- meat %>%
-  ggplot(aes(x = method_other_rank, fill = "00FFFF")) +
+  ggplot(aes(x = method_other_rank, fill = "#e3686c")) +
   geom_histogram() +
   labs(y = "responses", 
        title = "Other",
@@ -290,7 +295,8 @@ n <- meat %>%
 
 methods <-  i + j + k + l + m + n
 
-methods + plot_annotation(title = "Methods for Washing Meat Ranked by Preference/", caption = "Nonwater substances are liquids such as acids and salt brines")
+methods + plot_annotation(title = "Methods for Washing Meat Ranked by Preference", caption = "Nonwater substances are liquids such as acids and salt brines
+Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
 
 ```
 
@@ -300,8 +306,8 @@ methods + plot_annotation(title = "Methods for Washing Meat Ranked by Preference
 
 o <- meat %>% 
   filter(remove_pathogen_rank != "NA") %>% 
-  ggplot(aes(y = remove_pathogen_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_pathogen_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Pathogens",
        y = "  ") +
@@ -312,8 +318,8 @@ o <- meat %>%
 
 p <-meat %>% 
   filter(remove_chemicals_rank != "NA") %>% 
-  ggplot(aes(y = remove_chemicals_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_chemicals_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Chemicals",
        y = "  ") +
@@ -324,8 +330,8 @@ p <-meat %>%
 
 q <- meat %>% 
   filter(remove_inedible_rank!= "NA") %>% 
-  ggplot(aes(y = remove_inedible_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_inedible_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Inedible
 Portions",
@@ -337,8 +343,8 @@ Portions",
 
 r <- meat %>% 
   filter(remove_undesirable_rank != "NA") %>% 
-  ggplot(aes(y = remove_undesirable_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_undesirable_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Undesirable 
 Portions",
@@ -350,8 +356,8 @@ Portions",
   
 s <- meat %>% 
   filter(remove_blood_rank != "NA") %>% 
-  ggplot(aes(y = remove_blood_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_blood_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Blood",
        y = "  ") +
@@ -362,8 +368,8 @@ s <- meat %>%
 
 t <- meat %>% 
   filter(remove_slime_rank != "NA") %>% 
-  ggplot(aes(y = remove_slime_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_slime_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Slime",
        y = "  ") +
@@ -375,8 +381,8 @@ t <- meat %>%
 
 u <- meat %>% 
   filter(remove_fat_rank != "NA") %>% 
-  ggplot(aes(y = remove_fat_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_fat_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Fat",
        y = "  ") +
@@ -387,8 +393,8 @@ u <- meat %>%
 
 v <- meat %>% 
   filter(remove_liquid_rank != "NA") %>% 
-  ggplot(aes(y = remove_liquid_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_liquid_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Liquids",
        y = "  ") +
@@ -399,8 +405,8 @@ v <- meat %>%
 
 w <- meat %>% 
   filter(remove_other_rank != "NA") %>% 
-  ggplot(aes(y = remove_other_rank, fill = "00FFFF")) +
-  geom_bar() +
+  ggplot(aes(y = remove_other_rank)) +
+  geom_bar(fill = "#781380") +
   labs(x = "responses", 
        title = "Other",
        y = "  ") +
