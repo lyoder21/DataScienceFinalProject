@@ -228,7 +228,7 @@ g <- meat %>%
                
 
 work <-  a + b + c + d + e + f + g + plot_annotation(title = "Why do people choose to wash their meat?", 
-                                                     caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important, and the line being the average ranking")
+                                                     caption = "Ranking on 1 - 7 scale, with 1 being very important and 7 being unimportant, and the line being the average ranking")
 
 work 
 ```
