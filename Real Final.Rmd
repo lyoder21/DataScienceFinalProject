@@ -1,0 +1,174 @@
+---
+title: "CREATIVE TITLE"
+author: "Lydia Yoder, Sarah Falkovic, and Demetrius Cordero"
+date: "12/16/2020"
+output: html_document
+---
+
+
+```{r, echo=FALSE}
+library(janitor)
+library(patchwork)
+library(tidyverse)
+```
+
+```{r, echo=FALSE}
+meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
+    col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
+    skip = 1) %>% 
+  clean_names() %>% 
+  filter(age <= 150, age>=9) %>% 
+  filter(gender == "Female"|gender=="Male"|gender=="Non-binary"|gender=="Prefer not to disclose") %>% 
+  rename(reason_health_safety_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_concerned_about_the_health_and_safety_of_the_meat,
+         
+         reason_religious_practice_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_acting_in_accordance_with_a_religious_belief_or_practice,
+         
+         reason_nonreligious_custom_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_following_a_non_religious_custom_or_tradition,
+         
+         reason_appearance_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_appearance_of_the_meat,
+        
+         reason_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
+         
+         reason_improve_texture_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_texture_of_the_meat,
+         
+         reason_improve_taste_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_following_reasons_with_number_1_being_the_most_relevant_to_you_number_2_next_most_relevant_and_so_on_if_something_isn_t_relevant_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_i_m_trying_to_improve_the_taste_or_smell_of_the_meat,
+         
+         remove_pathogen_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_pathogens_bacteria_viruses_fungi_etc,
+         
+         remove_inedible_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_inedible_debris_dirt_dust_bone_fragments_feathers_etc,
+         
+         remove_blood_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_blood,
+         
+         remove_liquid_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_meat_juice_the_pink_non_blood_liquid_that_comes_out_of_muscle_tissue,
+         
+         remove_slime_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_slime,
+         
+         remove_chemicals_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_artificial_chemicals_preservatives_pesticides_cleaning_solutions_etc,
+         
+         remove_undesirable_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_undesirable_flavors_or_odors,
+         
+        remove_fat_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_fat,
+        
+        remove_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_what_are_you_trying_to_remove_rank_the_following_concerns_in_order_of_their_importance_to_you_with_number_1_being_the_most_important_number_2_the_next_most_important_and_so_on_if_something_isn_t_a_concern_to_you_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
+        
+        method_water_rinse_bowl_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_in_a_bowl_or_basin_of_plain_water,
+        
+        method_nonwater_rinse_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_in_anything_other_than_plain_water_salt_brine_vinegar_citrus_etc,
+        
+        method_running_water_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_rinsing_under_running_water,
+        
+        method_nonwater_soak_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_soaking_awhile_in_anything_other_than_plain_water_salt_brine_vinegar_citrus_etc,
+        
+        method_other_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_other,
+        
+        method_water_soak_rank = if_you_do_commonly_wash_any_raw_meat_before_cooking_please_rank_the_methods_you_use_with_number_1_being_the_method_you_use_most_often_number_2_next_most_often_and_so_on_if_you_don_t_use_the_method_at_all_leave_the_box_blank_you_may_only_choose_one_row_per_ranking_column_soaking_awhile_in_plain_water
+  )
+
+meat<- meat %>% 
+  mutate(country_residence = recode(meat$country_residence, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK",
+       `Russian Federation` = "Russia",
+       `Korea (Republic of)` = "South Korea",
+       `Moldova (Republic of)` = "Moldova",
+       `Macedonia (the former Yugoslav Republic of)` = "Macedonia",
+       `Venezuela (Bolivarian Republic of)` = "Venezuela",
+       `Taiwan, Province of China[a]` = "Taiwan",
+       `Iran (Islamic Republic of)` = "Iran",
+       `Tanzania, United Republic of` = "Tanzania",
+       `Korea (Democratic People's Republic of)` = "North Korea")) %>% 
+  mutate(country_origin = recode(meat$country_origin, 
+       `United States of America` = "USA",
+       `United Kingdom of Great Britain and Northern Ireland` = "UK",
+       `Russian Federation` = "Russia",
+       `Korea (Republic of)` = "South Korea",
+       `Moldova (Republic of)` = "Moldova",
+       `Macedonia (the former Yugoslav Republic of)` = "Macedonia",
+       `Venezuela (Bolivarian Republic of)` = "Venezuela",
+       `Taiwan, Province of China[a]` = "Taiwan",
+       `Iran (Islamic Republic of)` = "Iran",
+       `Tanzania, United Republic of` = "Tanzania",
+       `Korea (Democratic People's Republic of)` = "North Korea"))
+
+missing_countries_residence <- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_residence")) %>% 
+  rename(country_residence = region) %>% 
+  full_join(meat)
+
+missing_countries_origin<- world_map %>% 
+  distinct(region) %>% 
+  select(region) %>% 
+  anti_join(meat, by = c("region" = "country_origin")) %>% 
+  rename(country_origin = region) %>% 
+  full_join(meat)
+```
+
+All around the world, there are people of different ages with different ways of living. They live each individual life through their culture, and food is a powerful window into that culture. Journalist Adam Ragusea sought to consider the differences in how people prepare their meat based on both geographic location and other factors of one’s upbringing. To do this, he developed a survey that he broadcasted to his online following via the social media website called TikTok. He was able to garner about 1,300 responses to his survey, which we analyze here. The two graphs below indicate the age range of respondents by country, and we have also included a breakdown of the genders of respondents. Both graphs have data missing towards Africa and some other parts of the world indicating that Adam Ragusea’s responses tended to fit his own social media demographic which primarily appeals to young men from America and Eastern Europe. He also primarily advertised his survey on the social media platform called TikTok, which primarily attracts an American, European, and Asian audience. You can see this demographic distribution of this data set in both the world map of average age by country and the bar plot of gender distribution seen below. It is also notable that largely young men participated in this survey which might make this data hard to generalize to a broader population.
+
+```{r, echo=FALSE}
+world_map <- map_data("world")
+
+meat_age<- missing_countries_residence %>% 
+  group_by(country_residence) %>% 
+  summarize(avg_age = mean(age)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_residence,
+               fill = avg_age))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  scale_fill_viridis_c(option = "magma")+
+  labs(title = "Average Age By Country of Residence", x="", y="")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+
+meat_age
+
+```
+##HERE we need bar plot of gender distribution
+
+These next graphs depict survey data where participants considered the personal importance of issues like food safety and discussed the reasons they wash the meat before they cook it. Ragusea chose to use a ranking system where items were ranked by priority, where the closer a given topic was ranked to 1, the more the participant considers that issue important. So in the following graphs, the lower the value is, the more participants thought the topic was important. Below, you can see that food safety is not a typical concern for participants worldwide. 
+
+```{r}
+meat_importance_residence<- missing_countries_residence %>% 
+  group_by(country_residence) %>%
+  summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
+  ggplot() +
+  geom_map(map = world_map,
+           aes(map_id = country_residence,
+               fill = avg_importance))+
+  expand_limits(x = world_map$long, y = world_map$lat) + 
+  expand_limits(x = world_map$long, y = world_map$lat)+
+  labs(title = "Average Importance of Food Safety By Country of Residence", x = "", y = "")+
+  scale_fill_viridis_c(option = "magma")+
+  theme(panel.grid.major.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_text(hjust = -0.29, vjust=2.12),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major.x = element_blank(),
+  axis.text = element_blank())
+meat_importance_residence 
+```
+
+The bar plots below show how participants ranked the importance of different reasons for washing meat. Overall, the two most important reasons people cited for washing their meat before cooking it was to improve taste and for health and safety reasons. This is intriguing because on an international scale, this survey found that many countries do not consider food safety to be an important issue that they deal with in their own kitchens. 
+
+#HERE IS GRAPH TITLED "WHY DO PEOPLE WASH THEIR MEAT?"
+
+The graph below shows the difference in how Hispanic and Non-Hispanic households perceive food safety. Overall, both Hispanic and Non-Hispanic households tend to regard food safety as a less important issue. While some Non-Hispanic households tended to prioritize food safety more often, it is dwarfed by the considerable number of people who considered it a less important issue regardless of household size. On top of this, larger non-hispanic and hispanic households tended to view food safety as a less important issue than smaller ones, which could indicate that ensuring that everyone is fed was a much more important issue than the safety of the food being put on the table.
+
+#Ranking food saftey hispanic v non-hispanic comparision graph
+
+These final graphs look at the popularity of various methods people use to wash their meat. Overall, the most highly ranked method for those who wash their meat was using running water from a sink. This is very interesting when considered in context of the second graph analyzing what people aim to remove from meat when they clean it. The three things ranked as highest priority to remove when cleaning are pathogens, blood, and undesirable portions of meat. Cleaning meat under running water from a sink is actually considered one of the more dangerous ways to prepare meat because it allows water droplets from the sink to spread food-borne pathogens in and near the sink using the transmission of water droplets. While this isn’t a massive health crisis concern, it is an important topic to think about in areas where people raise their own animals to slaughter or purchase their meat is a less processed form. Eating game or meat that they butchered themselves requires cleaning. In those places, the concern of removing blood or inedible things from meat is a much larger concern. Removing blood can also have cultural and religious significance, especially in Jewish or Muslim communities. 
+
+#Method for washing meat graph
+#What is being removed graph
+
+The graph above portrays the varied importance of what chemicals are removed from the meat when it is washed. This gives people a better understanding of why meat is washed. Many people don't get their meat from supermarkets where it's been processed. Many people still raise their own food and slaughter it, and thus getting dirt and debris in food is a massive concern.
+
+Overall, it’s important to remember that food presentation varies widely both between and within countries. While larger household sizes may relate to a lower prioritization of food safety, this research requires more input from both nations not included in this study and other demographics such as women. However, this research does indicate the need for a cultural shift in how we prepare meat in order to address the issue of foodborne illness. Adam Ragusea himself even contends that there is a great potential here for research into poverty and generational trauma in the future.
+
