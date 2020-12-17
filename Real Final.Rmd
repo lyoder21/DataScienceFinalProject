@@ -6,13 +6,13 @@ output: html_document
 ---
 
 
-```{r, echo=FALSE}
+```{r}
 library(janitor)
 library(patchwork)
 library(tidyverse)
 ```
 
-```{r, echo=FALSE}
+```{r}
 meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
     col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
     skip = 1) %>% 
@@ -129,6 +129,17 @@ meat_age<- missing_countries_residence %>%
 
 meat_age
 
+
+target <- c("Male", "Female", "Non-binary", "Transgender male", "Transgender female", "Prefer not to disclose", "NA")
+
+meat %>% 
+  filter(gender == target) %>% 
+  ggplot(aes(x = gender, fill = gender))+
+  geom_bar() +
+  scale_fill_viridis_d(option = "magma") +
+  labs(title = "Gender Distribution of Survey Participants",
+       x = "  ")
+
 ```
 ##HERE we need bar plot of gender distribution
 
@@ -157,16 +168,318 @@ meat_importance_residence
 
 The bar plots below show how participants ranked the importance of different reasons for washing meat. Overall, the two most important reasons people cited for washing their meat before cooking it was to improve taste and for health and safety reasons. This is intriguing because on an international scale, this survey found that many countries do not consider food safety to be an important issue that they deal with in their own kitchens. 
 
-#HERE IS GRAPH TITLED "WHY DO PEOPLE WASH THEIR MEAT?"
+```{r}
+# ranking reasons
 
+aa <- meat %>% 
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
+
+a <-meat %>%
+  ggplot(aes(x = reason_religious_practice_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Religious Customs",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_religious_practice_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=aa, y=0), aes(x + .4, y), label=aa, vjust= -2) 
+
+bb <- meat %>% 
+  summarise(mean(reason_religious_practice_rank, na.rm = TRUE))
+
+b <- meat %>%
+  ggplot(aes(x = reason_nonreligious_custom_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Nonreligious Customs",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_nonreligious_custom_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=bb, y=0), aes(x + .4, y), label=bb, vjust= -2) 
+
+cc <- meat %>% 
+  summarise(mean(reason_health_safety_rank, na.rm = TRUE))
+
+c <- meat %>%
+  ggplot(aes(x = reason_health_safety_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Health and Safety",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_health_safety_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=cc, y=0), aes(x + .4, y), label=cc, vjust= -2) 
+
+dd <- meat %>% 
+  summarise(mean(reason_improve_taste_rank, na.rm = TRUE))	
+
+d <- meat %>%
+  ggplot(aes(x = reason_improve_taste_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Improving Taste",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_improve_taste_rank, na.rm = TRUE))) 
+ # + geom_text(data=data.frame(x=dd, y=0), aes(x + .4, y), label=dd, vjust= -2) 
+
+
+ee <- meat %>% 
+  summarise(mean(reason_improve_texture_rank, na.rm = TRUE))	
+
+e <- meat %>%
+  ggplot(aes(x = reason_improve_texture_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Improving Texture",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_improve_texture_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=ee, y=0), aes(x + .4, y), label=ee, vjust= -2)
+
+ff <- meat %>% 
+  summarise(mean(reason_appearance_rank, na.rm = TRUE))	
+
+f <- meat %>%
+  ggplot(aes(x = reason_appearance_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Alter Appearance",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_appearance_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x=ff ,y=0), aes(x + .4, y), label=ff, vjust= -28)
+
+gg <- meat %>%
+  summarise(mean(reason_other_rank, na.rm = TRUE))
+  
+ # 2.390057 mean rank value for "other", found using 
+
+g <- meat %>%
+  ggplot(aes(x = reason_other_rank)) +
+  geom_histogram(fill = "#ff9b4f") +
+  labs(y = "responses", 
+       title = "Other Reasons") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(reason_other_rank, na.rm = TRUE))) 
+# + geom_text(data=data.frame(x = gg ,y=0), aes(x + .4, y), label= 2.390057, vjust= -28)
+               
+
+work <-  a + b + c + d + e + f + g + plot_annotation(title = "Why do people choose to wash their meat?", 
+                                                     caption = "Ranking on 1 - 7 scale, with 1 being very important and 7 being unimportant, and the line being the average ranking")
+
+work 
+```
 The graph below shows the difference in how Hispanic and Non-Hispanic households perceive food safety. Overall, both Hispanic and Non-Hispanic households tend to regard food safety as a less important issue. While some Non-Hispanic households tended to prioritize food safety more often, it is dwarfed by the considerable number of people who considered it a less important issue regardless of household size. On top of this, larger non-hispanic and hispanic households tended to view food safety as a less important issue than smaller ones, which could indicate that ensuring that everyone is fed was a much more important issue than the safety of the food being put on the table.
 
-#Ranking food saftey hispanic v non-hispanic comparision graph
+```{r}
+library(wesanderson)
+library(htmltools)
+food.labs <- c("Non-Hispanic", "Hispanic")
+names(food.labs) <- c("No", "Yes")
+
+
+meat %>% 
+  filter(houshold_size <= 50,
+         hispanic == "Yes"| hispanic == "No") %>% 
+  ggplot(aes(x = houshold_size, y = food_safety_important, color = hispanic)) +
+  geom_jitter() +
+  facet_wrap(vars(hispanic), 
+             nrow = 1, 
+             labeller = labeller(hispanic = food.labs)) +
+  labs( x = "Household Size",
+       y = "  ",
+       caption = "Ranking on 1 - 5 scale, with 1 being very important and 5 being less important",
+       title = "Ranking Food Safety Importance between Household Sizes 
+in Hispanic and Non-Hispanic Populations") +
+  theme(legend.position = "none") +
+  scale_color_manual(values = wes_palette("FantasticFox1"))
+
+```
 
 These final graphs look at the popularity of various methods people use to wash their meat. Overall, the most highly ranked method for those who wash their meat was using running water from a sink. This is very interesting when considered in context of the second graph analyzing what people aim to remove from meat when they clean it. The three things ranked as highest priority to remove when cleaning are pathogens, blood, and undesirable portions of meat. Cleaning meat under running water from a sink is actually considered one of the more dangerous ways to prepare meat because it allows water droplets from the sink to spread food-borne pathogens in and near the sink using the transmission of water droplets. While this isn’t a massive health crisis concern, it is an important topic to think about in areas where people raise their own animals to slaughter or purchase their meat is a less processed form. Eating game or meat that they butchered themselves requires cleaning. In those places, the concern of removing blood or inedible things from meat is a much larger concern. Removing blood can also have cultural and religious significance, especially in Jewish or Muslim communities. 
 
-#Method for washing meat graph
-#What is being removed graph
+```{r}
+#ranking methods
+
+i <-meat %>%
+  ggplot(aes(x = method_running_water_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Running Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_running_water_rank, na.rm = TRUE))) 
+
+j <- meat %>%
+  ggplot(aes(x = method_water_rinse_bowl_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Water in Bowl",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_rinse_bowl_rank, na.rm = TRUE)))
+
+k <- meat %>%
+  ggplot(aes(x = method_nonwater_rinse_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Nonwater Rinse",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_rinse_rank, na.rm = TRUE)))
+
+l <- meat %>%
+  ggplot(aes(x = method_water_soak_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Water",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_water_soak_rank, na.rm = TRUE)))
+
+m <- meat %>%
+  ggplot(aes(x = method_nonwater_soak_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Soak in Nonwater",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_nonwater_soak_rank, na.rm = TRUE)))
+
+n <- meat %>%
+  ggplot(aes(x = method_other_rank, fill = "#e3686c")) +
+  geom_histogram() +
+  labs(y = "responses", 
+       title = "Other",
+       x = "  ") +
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = mean(method_other_rank, na.rm = TRUE)))
+               
+
+methods <-  i + j + k + l + m + n
+
+methods + plot_annotation(title = "Methods for Washing Meat Ranked by Preference", caption = "Nonwater substances are liquids such as acids and salt brines
+Ranking on 1 - 5 scale, with 1 being very important and 5 being less important")
+
+
+#concerns
+
+o <- meat %>% 
+  filter(remove_pathogen_rank != "NA") %>% 
+  ggplot(aes(y = remove_pathogen_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Pathogens",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))  
+
+p <-meat %>% 
+  filter(remove_chemicals_rank != "NA") %>% 
+  ggplot(aes(y = remove_chemicals_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Chemicals",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8))  +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))
+
+q <- meat %>% 
+  filter(remove_inedible_rank!= "NA") %>% 
+  ggplot(aes(y = remove_inedible_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Inedible
+Portions",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
+
+r <- meat %>% 
+  filter(remove_undesirable_rank != "NA") %>% 
+  ggplot(aes(y = remove_undesirable_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Undesirable 
+Portions",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500)) 
+  
+s <- meat %>% 
+  filter(remove_blood_rank != "NA") %>% 
+  ggplot(aes(y = remove_blood_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Blood",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500)) 
+
+t <- meat %>% 
+  filter(remove_slime_rank != "NA") %>% 
+  ggplot(aes(y = remove_slime_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Slime",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))
+  
+
+u <- meat %>% 
+  filter(remove_fat_rank != "NA") %>% 
+  ggplot(aes(y = remove_fat_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Fat",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
+
+v <- meat %>% 
+  filter(remove_liquid_rank != "NA") %>% 
+  ggplot(aes(y = remove_liquid_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Liquids",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 1500),
+                     breaks = c(0, 750, 1500))   
+
+w <- meat %>% 
+  filter(remove_other_rank != "NA") %>% 
+  ggplot(aes(y = remove_other_rank)) +
+  geom_bar(fill = "#781380") +
+  labs(x = "responses", 
+       title = "Other",
+       y = "  ") +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 8)) +
+  scale_x_continuous(limits = c(0, 50),
+                     breaks = c(0, 25, 50))
+
+concerns <-  o + p + q + r + s + t + u + v + w 
+concerns + plot_annotation(title = "What is Being Removed when Washing Meat?", caption = "Particpants ranked the most important feature washing removes from the meat.") 
+```
+
 
 The graph above portrays the varied importance of what chemicals are removed from the meat when it is washed. This gives people a better understanding of why meat is washed. Many people don't get their meat from supermarkets where it's been processed. Many people still raise their own food and slaughter it, and thus getting dirt and debris in food is a massive concern.
 
