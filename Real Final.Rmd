@@ -1,18 +1,24 @@
 ---
-title: "CREATIVE TITLE"
+title: "Food Safety Across the World"
 author: "Lydia Yoder, Sarah Falkovic, and Demetrius Cordero"
 date: "12/16/2020"
 output: html_document
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+```
 
-```{r}
+
+```{r, echo=FALSE}
 library(janitor)
 library(patchwork)
 library(tidyverse)
 ```
 
-```{r}
+```{r, echo=FALSE}
+world_map <- map_data("world")
+
 meat <- read_csv("RaguseaMeatWashingSurveyResponsesRaw.csv", 
     col_types = cols(Timestamp = col_datetime(format = "%m/%d/%y %H:%M")), 
     skip = 1) %>% 
@@ -108,7 +114,6 @@ missing_countries_origin<- world_map %>%
 All around the world, there are people of different ages with different ways of living. They live each individual life through their culture, and food is a powerful window into that culture. Journalist Adam Ragusea sought to consider the differences in how people prepare their meat based on both geographic location and other factors of one’s upbringing. To do this, he developed a survey that he broadcasted to his online following via the social media website called TikTok. He was able to garner about 1,300 responses to his survey, which we analyze here. The two graphs below indicate the age range of respondents by country, and we have also included a breakdown of the genders of respondents. Both graphs have data missing towards Africa and some other parts of the world indicating that Adam Ragusea’s responses tended to fit his own social media demographic which primarily appeals to young men from America and Eastern Europe. He also primarily advertised his survey on the social media platform called TikTok, which primarily attracts an American, European, and Asian audience. You can see this demographic distribution of this data set in both the world map of average age by country and the bar plot of gender distribution seen below. It is also notable that largely young men participated in this survey which might make this data hard to generalize to a broader population.
 
 ```{r, echo=FALSE}
-world_map <- map_data("world")
 
 meat_age<- missing_countries_residence %>% 
   group_by(country_residence) %>% 
@@ -141,11 +146,10 @@ meat %>%
        x = "  ")
 
 ```
-##HERE we need bar plot of gender distribution
 
 These next graphs depict survey data where participants considered the personal importance of issues like food safety and discussed the reasons they wash the meat before they cook it. Ragusea chose to use a ranking system where items were ranked by priority, where the closer a given topic was ranked to 1, the more the participant considers that issue important. So in the following graphs, the lower the value is, the more participants thought the topic was important. Below, you can see that food safety is not a typical concern for participants worldwide. 
 
-```{r}
+```{r, echo=FALSE}
 meat_importance_residence<- missing_countries_residence %>% 
   group_by(country_residence) %>%
   summarize(avg_importance = mean(food_safety_important, na.rm = TRUE)) %>% 
@@ -168,7 +172,7 @@ meat_importance_residence
 
 The bar plots below show how participants ranked the importance of different reasons for washing meat. Overall, the two most important reasons people cited for washing their meat before cooking it was to improve taste and for health and safety reasons. This is intriguing because on an international scale, this survey found that many countries do not consider food safety to be an important issue that they deal with in their own kitchens. 
 
-```{r}
+```{r, echo=FALSE}
 # ranking reasons
 
 aa <- meat %>% 
@@ -270,9 +274,10 @@ work <-  a + b + c + d + e + f + g + plot_annotation(title = "Why do people choo
 
 work 
 ```
+
 The graph below shows the difference in how Hispanic and Non-Hispanic households perceive food safety. Overall, both Hispanic and Non-Hispanic households tend to regard food safety as a less important issue. While some Non-Hispanic households tended to prioritize food safety more often, it is dwarfed by the considerable number of people who considered it a less important issue regardless of household size. On top of this, larger non-hispanic and hispanic households tended to view food safety as a less important issue than smaller ones, which could indicate that ensuring that everyone is fed was a much more important issue than the safety of the food being put on the table.
 
-```{r}
+```{r, echo=FALSE}
 library(wesanderson)
 library(htmltools)
 food.labs <- c("Non-Hispanic", "Hispanic")
@@ -299,7 +304,7 @@ in Hispanic and Non-Hispanic Populations") +
 
 These final graphs look at the popularity of various methods people use to wash their meat. Overall, the most highly ranked method for those who wash their meat was using running water from a sink. This is very interesting when considered in context of the second graph analyzing what people aim to remove from meat when they clean it. The three things ranked as highest priority to remove when cleaning are pathogens, blood, and undesirable portions of meat. Cleaning meat under running water from a sink is actually considered one of the more dangerous ways to prepare meat because it allows water droplets from the sink to spread food-borne pathogens in and near the sink using the transmission of water droplets. While this isn’t a massive health crisis concern, it is an important topic to think about in areas where people raise their own animals to slaughter or purchase their meat is a less processed form. Eating game or meat that they butchered themselves requires cleaning. In those places, the concern of removing blood or inedible things from meat is a much larger concern. Removing blood can also have cultural and religious significance, especially in Jewish or Muslim communities. 
 
-```{r}
+```{r, echo=FALSE}
 #ranking methods
 
 i <-meat %>%
